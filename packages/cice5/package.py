@@ -129,6 +129,40 @@ CPPDEFS    := -DLINUX -DPAROPT
 CFLAGS     := {CFLAGS}
 FIXEDFLAGS := -132
 FREEFLAGS  :=
+
+DEBUG      := 0
+UNIT_TESTING := yes
+COMMDIR    := mpi
+ACCESS     := no
+IO_TYPE    := pio
+DITTO      := no
+BARRIERS   := yes
+AusCOM     := yes
+OASIS3_MCT := yes
+NICELYR    := 4       # number of vertical layers in the ice
+NSNWLYR    := 1       # number of vertical layers in the snow
+NICECAT    := 5       # number of ice thickness categories
+
+###########################################
+# ars599: 24032014
+#	copy from /short/p66/ars599/CICE.v5.0/accice.v504_csiro
+#	solo_ice_comp
+###########################################
+### Tracers               # match ice_in tracer_nml to conserve memory
+TRAGE      := 1          # set to 1 for ice age tracer
+TRFY       := 1          # set to 1 for first-year ice area tracer
+TRLVL      := 1          # set to 1 for level and deformed ice tracers
+TRPND      := 1          # set to 1 for melt pond tracers
+NTRAERO    := 0          # number of aerosol tracers 
+                         # (up to max_aero in ice_domain_size.F90) 
+                         # CESM uses 3 aerosol tracers
+TRBRI      := 1          # set to 1 for brine height tracer
+NBGCLYR    := 0          # number of zbgc layers
+TRBGCS     := 2          # number of skeletal layer bgc tracers 
+                         # TRBGCS=0 or 2<=TRBGCS<=9)
+
+NUMIN      := 11           # minimum file unit number
+NUMAX      := 99           # maximum file unit number
 """
 
         config["gcc"] = f"""
@@ -156,6 +190,8 @@ MOD_SUFFIX := mod
 LD         := $(FC)
 LDFLAGS    := $(FFLAGS) -v
 
+$(info stage1 CPPDEFS: $(CPPDEFS))
+
 CPPDEFS :=  $(CPPDEFS) -DNXGLOB=$(NXGLOB) -DNYGLOB=$(NYGLOB) \
             -DNUMIN=$(NUMIN) -DNUMAX=$(NUMAX) \
             -DTRAGE=$(TRAGE) -DTRFY=$(TRFY) -DTRLVL=$(TRLVL) \
@@ -164,6 +200,8 @@ CPPDEFS :=  $(CPPDEFS) -DNXGLOB=$(NXGLOB) -DNYGLOB=$(NYGLOB) \
             -DNICECAT=$(NICECAT) -DNICELYR=$(NICELYR) \
             -DNSNWLYR=$(NSNWLYR) \
             -DBLCKX=$(BLCKX) -DBLCKY=$(BLCKY) -DMXBLCKS=$(MXBLCKS)
+
+$(info stage2 CPPDEFS: $(CPPDEFS))
 
 ifeq ($(COMMDIR), mpi)
    SLIBS   :=  $(SLIBS) -lmpi
@@ -212,6 +250,8 @@ endif
 ifeq ($(OASIS3_MCT), yes)
    CPPDEFS := $(CPPDEFS) -DOASIS3_MCT
 endif
+
+$(info stage3 CPPDEFS: $(CPPDEFS))
 """
         fullconfig = config["pre"] + config[self.compiler.name] + config["post"]
         print(fullconfig)
