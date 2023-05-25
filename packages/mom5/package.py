@@ -24,7 +24,7 @@ class Mom5(MakefilePackage):
     # Depend on virtual package "mpi".
     depends_on("mpi")
     depends_on("netcdf-fortran@4.5.2:")
-    depends_on("netcdf-c@4.7.4:")
+    depends_on("netcdf-c~mpi@4.7.4:")
     depends_on("datetime-fortran")
     depends_on("oasis3-mct+deterministic", when="+deterministic")
     depends_on("oasis3-mct~deterministic", when="~deterministic")
@@ -296,8 +296,10 @@ TMPFILES = .*.m *.T *.TT *.hpm *.i *.lst *.proc *.s
 	hpm -r -o $*.hpm $*.x
 """
 
+        fullconfig = config[self.compiler.name] + config["post"]
+        print(fullconfig)
         with open(makeinc_path, "w") as makeinc:
-            makeinc.write(config[self.compiler.name] + config["post"])
+            makeinc.write(fullconfig)
 
     def build(self, spec, prefix):
 
