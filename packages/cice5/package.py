@@ -63,6 +63,9 @@ class Cice5(MakefilePackage):
     __targets[1682]["grid"] = "3600x2700"
     __targets[1682]["blocks"] = "200x180"
 
+    def url_for_version(self, version):
+        return "https://github.com/ACCESS-NRI/cice5/tarball/{0}".format(version)
+
     def edit(self, spec, prefix):
 
         srcdir = self.stage.source_path
