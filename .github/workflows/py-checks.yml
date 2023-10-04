@@ -22,7 +22,7 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Get py files changed
         id: get-files-changed
-        uses: tj-action/changed-files@v39
+        uses: tj-actions/changed-files@v39
         with:
           files: '**.py'
       - name: Ruff check
