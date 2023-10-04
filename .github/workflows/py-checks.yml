@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Get py files changed
         id: get-files
         # In this step, we get the names of all the *.py files changed before the push/pull_request event
